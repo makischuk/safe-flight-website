@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1209 316" fill="none">
+  <!-- PLACEHOLDER wordmark. Replace this file with your outlined "Exposure Italic" SVG.
+       Keep: white fill on a transparent background so CSS opacity drives both the
+       faded desktop state and the solid mobile state from one asset. -->
+  <text x="604" y="215" text-anchor="middle"
+        font-family="'Snell Roundhand','Brush Script MT','Segoe Script',cursive"
+        font-style="italic" font-weight="700" font-size="250"
+        letter-spacing="-6" fill="#ffffff">Safe Flight</text>
+</svg>
