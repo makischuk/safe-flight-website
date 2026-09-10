@@ -15,21 +15,16 @@
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
-  // Fixed label anchors, normalised to the canvas box (0..1).
-  const LABELS = [
-    { text: "Brand", x: 0.3, y: 0.45, anchor: "end" },
-    { text: "Product", x: 0.6, y: 0.4, anchor: "start" },
-    { text: "Experience", x: 0.53, y: 0.61, anchor: "middle" },
-  ];
-  const CENTER = { x: 0.47, y: 0.49 };
-
-  // Three metaball circles (normalised base position + radius + orbit).
+  // Three metaball circles (normalised base position + radius + orbit + label).
   // Centers sit far enough apart that the field dips between them → real necks.
+  // Each label + its connector line rides along with its circle.
   const CIRCLES = [
-    { bx: 0.29, by: 0.37, r: 0.19, sx: 0.53, sy: 0.37, ph: 0.0, orbit: 0.075 },
-    { bx: 0.7, by: 0.4, r: 0.2, sx: 0.41, sy: 0.61, ph: 2.1, orbit: 0.075 },
-    { bx: 0.5, by: 0.69, r: 0.19, sx: 0.62, sy: 0.47, ph: 4.0, orbit: 0.08 },
+    { bx: 0.29, by: 0.37, r: 0.19, sx: 0.53, sy: 0.37, ph: 0.0, orbit: 0.075, label: "Brand" },
+    { bx: 0.7, by: 0.4, r: 0.2, sx: 0.41, sy: 0.61, ph: 2.1, orbit: 0.075, label: "Product" },
+    { bx: 0.5, by: 0.69, r: 0.19, sx: 0.62, sy: 0.47, ph: 4.0, orbit: 0.08, label: "Experience" },
   ];
+
+  const LABEL_REACH = 0.5; // labels sit this far from the centroid toward each circle
 
   const THRESHOLD = 1.5; // iso value of the metaball field (higher = leaner necks)
   const GRID = 74; // contour resolution (divisions across the short side)
@@ -282,23 +277,36 @@
       ctx.lineJoin = "round";
       ctx.stroke();
 
-      // ---- center dot + connector lines + labels ----
-      const cx = w * CENTER.x;
-      const cy = h * CENTER.y;
-      const labelPts = LABELS.map((l) => ({
-        ...l,
-        px: w * l.x,
-        py: h * l.y,
-      }));
+      // ---- center dot + connector lines + labels (all ride the circles) ----
+      let cx = 0,
+        cy = 0;
+      for (const c of this.circles) {
+        cx += c.x;
+        cy += c.y;
+      }
+      cx /= this.circles.length;
+      cy /= this.circles.length;
+
+      const labelPts = this.circles.map((c) => {
+        const px = cx + (c.x - cx) * LABEL_REACH;
+        const py = cy + (c.y - cy) * LABEL_REACH;
+        let anchor = "center";
+        if (px < cx - scale * 0.02) anchor = "end";
+        else if (px > cx + scale * 0.02) anchor = "start";
+        return { text: c.label, px, py, anchor };
+      });
 
       ctx.lineWidth = 1;
       ctx.strokeStyle = this.colLine;
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = 0.5;
       labelPts.forEach((l) => {
         const ang = Math.atan2(l.py - cy, l.px - cx);
         ctx.beginPath();
         ctx.moveTo(cx, cy);
-        ctx.lineTo(l.px - Math.cos(ang) * scale * 0.05, l.py - Math.sin(ang) * scale * 0.05);
+        ctx.lineTo(
+          l.px - Math.cos(ang) * scale * 0.055,
+          l.py - Math.sin(ang) * scale * 0.055
+        );
         ctx.stroke();
       });
       ctx.globalAlpha = 1;
@@ -309,7 +317,7 @@
       ctx.fill();
 
       ctx.fillStyle = this.colAccent;
-      ctx.font = `600 ${Math.max(9, scale * 0.032)}px "Helvetica Neue", Arial, sans-serif`;
+      ctx.font = `500 ${Math.max(10, scale * 0.033)}px "Feijoa", Georgia, serif`;
       ctx.textBaseline = "middle";
       labelPts.forEach((l) => {
         ctx.textAlign = l.anchor;
