@@ -170,7 +170,8 @@ body {
   }
 
   body {
-    align-items: stretch; /* card fills width; top-aligns if it grows tall */
+    display: block; /* normal flow so the card can grow taller than the
+                       viewport and the page scrolls (no flex stretch cap) */
   }
 
   .card {
@@ -180,7 +181,8 @@ body {
     padding: 0;
     gap: 0;
     background: var(--blue);
-    border-radius: 0; /* sharp corners at the screen edge */
+    border-radius: 0;    /* sharp corners at the screen edge */
+    overflow: visible;   /* let tall content grow the page instead of clipping */
   }
 
   .panel {
@@ -191,8 +193,12 @@ body {
     display: none;
   }
 
+  /* fill the viewport so the footer pins to the bottom when content is short,
+     but grow past it (and let the page scroll) when content is tall */
   .panel--content {
     flex: 1 1 auto;
+    min-height: 100svh;
+    overflow: visible;
   }
 
   /* email at top is replaced by the footer email */
