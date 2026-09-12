@@ -17,13 +17,13 @@
   --blue: #003ace;        /* panel fill */
   --frame: #1a4ed3;       /* 1px lighter-blue frame + divider between panels */
   --white: #ffffff;
-  --page-bg: #ededed;     /* the light field the card floats on (desktop) */
+  --page-bg: #1a4ed3;     /* full-bleed field = the lighter-blue frame color */
 
   --rule: rgba(255, 255, 255, 0.22); /* horizontal hairlines between sections */
   --numeral-opacity: 0.4;
 
   --radius: 24px;
-  --margin: clamp(16px, 4vw, 56px);   /* gap between card and viewport edge */
+  --margin: 0px;                      /* full-bleed: field runs to every edge */
   --pad: clamp(24px, 2vw, 40px);      /* inner padding of a panel */
 
   --font: "Feijoa", Georgia, "Times New Roman", serif;
@@ -65,17 +65,17 @@ body {
 }
 
 /* ============================================================
-   THE CARD  (two rounded 24px panels; --frame shows through the
-   1px padding + gap as a subtle lighter-blue outline / divider)
+   THE CARD  — full-bleed lighter-blue field; two #003ace panels
+   flush to the edges with 24px rounded corners. The field shows
+   through the corner arcs + the 1px gap, giving the rounded
+   "valley" where the two panels meet and the corner crescents.
    ============================================================ */
 .card {
-  width: min(1280px, 100%);
-  height: min(832px, calc(100svh - var(--margin) * 2));
+  width: 100%;
+  height: 100svh;
   display: flex;
   gap: 1px;
-  padding: 1px;
   background: var(--frame);
-  border-radius: calc(var(--radius) + 1px);
   overflow: hidden;
 }
 
