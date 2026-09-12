@@ -5,97 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Safe Flight — Design Company</title>
   <meta name="description" content="Safe Flight is a Design Company. We work with companies to design new futures across brand, product & experience." />
+  <meta name="theme-color" content="#003ace" />
   <link rel="preload" href="fonts/feijoa-medium.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="css/styles.css?v=dev" />
+  <link rel="stylesheet" href="css/styles.css?v=3" />
 </head>
 <body>
   <main class="card" id="card">
 
-    <!-- ============ DESKTOP LAYOUT ============ -->
-    <div class="layout layout--desktop">
-      <a class="nav-link nav-contact" href="mailto:hello@safeflight.studio" data-reveal>Contact</a>
+    <!-- ============ BRAND PANEL (big wordmark, desktop only) ============ -->
+    <section class="panel panel--brand">
+      <img class="wordmark" src="assets/wordmark.svg" alt="Safe Flight" data-reveal="logo" />
+    </section>
 
-      <img class="wordmark wordmark--faded" src="assets/wordmark.svg" alt="Safe Flight" data-reveal="logo" />
+    <!-- ============ CONTENT PANEL ============ -->
+    <section class="panel panel--content">
+      <a class="email" href="mailto:start@safeflight.studio" data-reveal>start@safeflight.studio</a>
 
-      <div class="content">
-        <div class="col col--1">
-          <section class="sec" data-reveal>
-            <span class="numeral">I.</span>
-            <p>Safe Flight is a Design Company. We work with companies to design new futures across brand, product &amp; experience.</p>
-          </section>
-          <div class="divider divider--h" aria-hidden="true"></div>
-          <section class="sec" data-reveal>
-            <span class="numeral">II.</span>
-            <p class="lede">Our past clients include;</p>
-            <p>Nike, Walmart, Yahoo Finance, Peloton, Binance.US, Dapper Labs, IAC, Mythical Games, Uniswap, Alpha, TELUS, Storyhive</p>
-          </section>
-        </div>
+      <div class="sections">
+        <section class="sec" data-reveal>
+          <span class="numeral">I.</span>
+          <p>Safe Flight is a Design Company. We work with companies to design new futures across brand, product &amp; experience.</p>
+        </section>
 
-        <div class="col col--2">
-          <section class="sec" data-reveal>
-            <span class="numeral">III.</span>
-            <p class="lede">Our services include;</p>
-            <p>Brand strategy &amp; positioning, Creative direction, Concept development, Spatial design</p>
-            <p>Product marketing, Web &amp; experience design, Product launches</p>
-            <p>Product strategy, Product design</p>
-          </section>
-          <section class="sec" data-reveal>
-            <span class="numeral">IV.</span>
-            <p>Based out of Toronto &amp; Vancouver.</p>
-          </section>
-        </div>
+        <hr class="rule" data-reveal />
 
-        <div class="col col--3">
-          <section class="sec sec--ethos" data-reveal>
-            <div class="ethos-head">
-              <span class="numeral">V.</span>
-              <p class="lede">Our ethos embodied;</p>
-            </div>
-            <div class="blob-wrap" role="button" tabindex="0" aria-label="Brand, Product &amp; Experience — open fullscreen">
-              <canvas class="blob-canvas"></canvas>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
+        <section class="sec" data-reveal>
+          <span class="numeral">II.</span>
+          <p>Our past clients include;</p>
+          <p>Nike, Walmart, Yahoo Finance, Peloton, Binance.US, Dapper Labs, IAC, Mythical Games, Uniswap, Alpha, TELUS, Storyhive</p>
+        </section>
 
-    <!-- ============ MOBILE LAYOUT ============ -->
-    <!-- NOTE: copy is intentionally duplicated from the desktop layout above so each
-         layout stays clean & independently animatable. Keep the two in sync when editing text. -->
-    <div class="layout layout--mobile">
-      <img class="wordmark wordmark--solid" src="assets/wordmark.svg" alt="Safe Flight" data-reveal="logo" />
+        <hr class="rule" data-reveal />
 
-      <div class="blob-wrap blob-wrap--mobile" role="button" tabindex="0" aria-label="Brand, Product &amp; Experience — open fullscreen">
-        <canvas class="blob-canvas"></canvas>
+        <section class="sec" data-reveal>
+          <span class="numeral">III.</span>
+          <p>Our services include;</p>
+          <p>Brand strategy &amp; positioning, Creative direction, Concept development, Spatial design</p>
+          <p>Product marketing, Web &amp; experience design, Product launches</p>
+          <p>Product strategy, Product design</p>
+        </section>
+
+        <hr class="rule" data-reveal />
+
+        <section class="sec" data-reveal>
+          <span class="numeral">IV.</span>
+          <p>Based between Toronto &amp; Vancouver.</p>
+        </section>
       </div>
 
-      <section class="sec sec--center" data-reveal>
-        <span class="numeral">I.</span>
-        <p>Safe Flight is a Design Company. We work with companies to design new futures across brand, product &amp; experience.</p>
-      </section>
-
-      <a class="nav-link nav-touch" href="mailto:hello@safeflight.studio" data-reveal>Get in touch</a>
-
-      <section class="sec" data-reveal>
-        <span class="numeral">II.</span>
-        <p class="lede">Our past clients include;</p>
-        <p>Nike, Walmart, Yahoo Finance, Peloton, Binance.US, Dapper Labs, IAC, Mythical Games, Uniswap, Alpha, TELUS, Storyhive</p>
-      </section>
-
-      <div class="divider divider--h" aria-hidden="true"></div>
-
-      <section class="sec" data-reveal>
-        <span class="numeral">III.</span>
-        <p class="lede">Our services include;</p>
-        <p>Brand strategy &amp; positioning, Creative direction, Concept development, Spatial design</p>
-        <p>Product marketing, Web &amp; experience design, Product launches</p>
-        <p>Product strategy, Product design</p>
-      </section>
-    </div>
+      <!-- mobile footer: small wordmark + email, pinned to the bottom of the card -->
+      <footer class="footer" data-reveal>
+        <img class="wordmark wordmark--sm" src="assets/wordmark-inline.svg" alt="Safe Flight" />
+        <a class="email email--footer" href="mailto:start@safeflight.studio">start@safeflight.studio</a>
+      </footer>
+    </section>
 
   </main>
 
-  <script src="js/blob.js?v=dev"></script>
-  <script src="js/main.js?v=dev"></script>
+  <script src="js/main.js?v=3"></script>
 </body>
 </html>

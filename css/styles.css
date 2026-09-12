@@ -1,5 +1,8 @@
 /* ============================================================
    Safe Flight — styles
+   A rounded blue card floating on a near-black field.
+   Desktop: two panels (wordmark | content). Mobile: one panel,
+   content top, wordmark + email pinned bottom.
    ============================================================ */
 
 @font-face {
@@ -11,21 +14,22 @@
 }
 
 :root {
-  --blue: #003ace;
+  --blue: #003ace;        /* panel fill */
+  --frame: #1a4ed3;       /* 1px lighter-blue frame + divider between panels */
   --white: #ffffff;
-  --page-bg: #e7e7e7;
+  --page-bg: #1e1e1e;     /* the dark field the card floats on */
 
-  /* blob palette */
-  --blob-line: rgba(255, 255, 255, 0.9); /* metaball outline */
-  --blob-dot: #ffffff; /* center dot */
-  --blob-label: #ffffff; /* labels */
-
-  --divider: rgba(255, 255, 255, 0.08);
+  --rule: rgba(255, 255, 255, 0.22); /* horizontal hairlines between sections */
   --numeral-opacity: 0.4;
 
-  --font: "Feijoa", Georgia, "Times New Roman", serif;
+  --radius: 24px;
+  --margin: 0px;                      /* full-bleed: blue runs to the edges */
+  --pad: clamp(24px, 2vw, 40px);      /* inner padding of a panel */
 
-  /* motion */
+  --font: "Feijoa", Georgia, "Times New Roman", serif;
+  --fs-body: 13px;
+  --lh-body: 1.5;
+
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -41,232 +45,158 @@ body {
 }
 
 body {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--margin);
   background: var(--blue);
   color: var(--white);
   font-family: var(--font);
-  font-size: 14px;
-  line-height: 1.36;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   letter-spacing: -0.01em;
-  font-feature-settings: "dlig" 1;
+  /* no discretionary ligatures — keeps the swashy "st"/"ct" joins off */
+  font-feature-settings: normal;
+  font-variant-ligatures: common-ligatures no-discretionary-ligatures no-contextual;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* ---------- the full-bleed blue canvas ---------- */
+/* ============================================================
+   THE CARD  (frame color shows through 1px gaps between panels)
+   ============================================================ */
 .card {
-  position: relative;
   width: 100%;
-  min-height: 100dvh;
-  background: var(--blue);
+  height: 100svh;
+  display: flex;
+  gap: 1px;                 /* the 1px shows --frame = subtle vertical divider */
+  background: var(--frame);
   overflow: hidden;
 }
 
-/* full-width content, capped at 1500px and centered on the blue field */
-.layout--desktop {
+.panel {
+  background: var(--blue);
   position: relative;
-  width: 100%;
-  max-width: 1500px;
-  height: 100dvh;
-  margin: 0 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/* ---------- layouts ---------- */
-.layout--mobile {
-  display: none;
-}
-
-/* ============================================================
-   TYPOGRAPHY BITS
-   ============================================================ */
-.sec p {
-  max-width: 40ch;
-}
-.numeral {
-  display: block;
-  opacity: var(--numeral-opacity);
-}
-.lede {
-  /* the "Our ... include;" intro lines sit tight to their list */
-}
-.sec {
+/* left / brand panel — big centered wordmark */
+.panel--brand {
+  flex: 1 1 0;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad);
 }
-
-.nav-link {
-  color: var(--white);
-  text-decoration: none;
-  transition: opacity 0.25s ease;
-}
-.nav-link:hover {
-  opacity: 0.6;
-}
-
-/* ============================================================
-   WORDMARK
-   ============================================================ */
 .wordmark {
   display: block;
+  width: min(56%, 460px);
   height: auto;
   user-select: none;
   pointer-events: none;
 }
-/* desktop: huge, faded, bleeding off the top edge */
-.wordmark--faded {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 94%;
-  transform: translate(-50%, -36%);
-  opacity: 0.1;
-}
-/* mobile: solid white, edge-to-edge across the top */
-.wordmark--solid {
-  width: 100%;
-  opacity: 1;
-}
 
-/* ============================================================
-   DIVIDERS
-   ============================================================ */
-.divider {
-  background: var(--divider);
-  opacity: 0;
-  transition: opacity 0.9s ease 0.5s;
-}
-.card.is-loaded .divider {
-  opacity: 1;
-}
-.divider--h {
-  width: 100%;
-  height: 1px;
-}
-
-/* ============================================================
-   DESKTOP LAYOUT
-   ============================================================ */
-.nav-contact {
-  position: absolute;
-  top: clamp(28px, 5.3vh, 52px);
-  left: 37%;
-  z-index: 3;
-}
-
-.content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 40px;
-  display: flex;
-  align-items: flex-end;
-  gap: 0;
-  z-index: 2;
-}
-.col {
+/* right / content panel */
+.panel--content {
+  flex: 0 0 min(454px, 40vw);
   display: flex;
   flex-direction: column;
-}
-.col--1,
-.col--2 {
-  flex: 1 1 0;
-  min-width: 0;
-}
-/* the vertical rules are column borders, so they hug each column's content
-   height (never dragged taller by the blob column). They fade in on load. */
-.col--1,
-.col--2 {
-  border-right: 1px solid transparent;
-  transition: border-color 0.9s ease 0.45s;
-}
-.card.is-loaded .col--1,
-.card.is-loaded .col--2 {
-  border-right-color: var(--divider);
-}
-.col--1 {
-  gap: 40px;
-  padding-right: 49px;
-}
-.col--2 {
-  gap: 38px;
-  padding: 0 49px;
-}
-.col--3 {
-  flex: 0 0 auto;
-  width: 335px;
-  padding-left: 49px;
+  padding: var(--pad);
 }
 
-/* the ethos section holds heading + blob */
-.sec--ethos {
-  gap: 12px;
-  position: relative;
+.email {
+  align-self: flex-end;
+  color: var(--white);
+  text-decoration: none;
+  font-size: 14px;
+  transition: opacity 0.25s ease;
 }
-.blob-wrap {
-  width: 335px;
-  height: 286px;
-  max-width: 100%;
-  cursor: pointer;
-  touch-action: none;
+.email:hover {
+  opacity: 0.6;
 }
-.blob-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+
+/* the numbered sections — pinned to the bottom of the panel on desktop */
+.sections {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 40px;
+}
+.sec {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sec p {
+  max-width: 44ch;
+}
+.numeral {
+  opacity: var(--numeral-opacity);
+}
+
+.rule {
+  border: 0;
+  height: 1px;
+  background: var(--rule);
 }
 
 /* ============================================================
-   MOBILE LAYOUT
+   MOBILE FOOTER (hidden on desktop)
    ============================================================ */
-@media (max-width: 859px) {
-  .card {
-    min-height: 100dvh;
-    padding: 0 24px 40px;
+.footer {
+  display: none;
+}
+.wordmark--sm {
+  width: 140px;
+}
+
+/* ============================================================
+   MOBILE  (single panel: content top, wordmark + email bottom)
+   ============================================================ */
+@media (max-width: 860px) {
+  :root {
+    --pad: 20px;
   }
-  .layout--desktop {
+
+  .card {
+    height: auto;
+    min-height: 100svh;
+    gap: 0; /* one continuous card, no divider line */
+  }
+
+  .panel--brand {
     display: none;
   }
-  .layout--mobile {
+
+  .panel--content {
+    flex: 1 1 auto;
+  }
+
+  /* email at top is replaced by the footer email */
+  .panel--content > .email {
+    display: none;
+  }
+
+  .sections {
+    margin-top: 0; /* sit at the top */
+    padding-top: 4px;
+  }
+
+  .footer {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;       /* pin to bottom */
+    padding-top: 64px;
   }
-
-  .wordmark--solid {
-    position: relative;
-    z-index: 2;
-  }
-
-  .blob-wrap--mobile {
-    width: 100%;
-    max-width: 340px;
-    height: 290px;
-    margin: 8px auto 24px;
-  }
-
-  .sec--center {
-    align-items: center;
-    text-align: center;
-    margin: 24px auto 0;
-    max-width: 340px;
-  }
-  .sec--center p {
-    max-width: none;
-  }
-
-  .nav-touch {
-    align-self: center;
-    margin: 40px 0 48px;
-  }
-
-  .layout--mobile .sec {
-    margin-top: 0;
-  }
-  .layout--mobile > .sec:not(.sec--center) {
-    margin-top: 32px;
-  }
-  .layout--mobile .divider--h {
-    margin: 32px 0 0;
+  .email--footer {
+    display: inline-block;
+    align-self: flex-end;
   }
 }
 
@@ -275,130 +205,26 @@ body {
    ============================================================ */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
-  /* NB: no `will-change: transform` here — it would make [data-reveal]
-     ancestors a containing block for the fixed-position fullscreen blob,
-     pinning it to the section instead of the viewport. */
+  transform: translateY(12px);
 }
 [data-reveal="logo"] {
   transform: translateY(0) scale(0.985);
 }
-.wordmark--faded[data-reveal="logo"] {
-  transform: translate(-50%, -36%) scale(0.99);
-}
-
 [data-reveal].is-in {
   opacity: 1;
   transform: none;
   transition: opacity 0.75s var(--ease-out-expo),
     transform 0.85s var(--ease-out-expo);
 }
-.wordmark--faded[data-reveal="logo"].is-in {
-  opacity: 0.1;
-  transform: translate(-50%, -36%);
-}
 [data-reveal="logo"].is-in {
   transition: opacity 0.95s var(--ease-out-expo),
     transform 1.1s var(--ease-out-expo);
 }
 
-/* ============================================================
-   FULLSCREEN (FLIP scale + move — the blob grows from its inline
-   spot to fill the screen; heading rides to the top-left)
-   ============================================================ */
-.ethos-head {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-body.fs-open {
-  overflow: hidden;
-}
-/* everything but the blob + its heading drops away */
-body.fs-open .wordmark,
-body.fs-open .nav-link,
-body.fs-open .col--1,
-body.fs-open .col--2,
-body.fs-open .divider--h,
-body.fs-open .layout--mobile .sec {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-/* the blob box, blown up to a large centered square. Explicit sides + margin
-   auto center it reliably; a square matches the (square) inline box so the
-   FLIP scales uniformly straight to the middle. */
-.blob-wrap.is-fs {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  width: min(90vw, 90vh);
-  height: min(90vw, 90vh);
-  max-width: none;
-  z-index: 60;
-  cursor: default;
-}
-
-/* the section heading, parked top-left */
-.ethos-head.is-fs {
-  position: fixed;
-  top: 40px;
-  left: clamp(24px, 4vw, 64px);
-  z-index: 65;
-  width: auto;
-}
-
-/* rounded-square close control at the bottom center */
-.blob-fs-x {
-  position: fixed;
-  left: 50%;
-  bottom: 34px;
-  transform: translateX(-50%);
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 12px;
-  background: rgba(0, 0, 22, 0.28);
-  color: var(--white);
-  font-size: 15px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  z-index: 70;
-  transition: opacity 0.4s ease 0.15s, background 0.2s ease;
-}
-.blob-fs-x.is-in {
-  opacity: 1;
-}
-.blob-fs-x:hover {
-  background: rgba(0, 0, 22, 0.5);
-}
-
-/* ============================================================
-   REDUCED MOTION
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
-  }
-  .wordmark--faded[data-reveal="logo"] {
-    opacity: 0.1 !important;
-    transform: translate(-50%, -36%) !important;
-  }
-  .divider {
-    transition: none;
-  }
-  .blob-fs {
-    transition: none;
   }
 }
